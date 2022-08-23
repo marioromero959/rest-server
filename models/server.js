@@ -54,12 +54,12 @@ class Server{
 
     // Aca podemos cargar los demas enpoints
     routes(){
-    //    this.app.use(this.userPath, require('../routes/user')) //Llama a las rutas creadas en routes/user.js
-    //    this.app.use(this.buscarPath, require('../routes/buscar')) 
-    //    this.app.use(this.categoriasPath, require('../routes/categorias')) 
-    //    this.app.use(this.productosPath, require('../routes/productos')) 
-    //    this.app.use(this.uploadsPath, require('../routes/uploads')) 
-    //    this.app.use(this.orderPath, require('../routes/ordermp')) 
+       this.app.use(this.userPath, require('../routes/user')) //Llama a las rutas creadas en routes/user.js
+       this.app.use(this.buscarPath, require('../routes/buscar')) 
+       this.app.use(this.categoriasPath, require('../routes/categorias')) 
+       this.app.use(this.productosPath, require('../routes/productos')) 
+       this.app.use(this.uploadsPath, require('../routes/uploads')) 
+       this.app.use(this.orderPath, require('../routes/ordermp')) 
        this.app.use(this.email, require('../routes/email')) 
     }
     listen(){
