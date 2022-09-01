@@ -37,7 +37,6 @@ const comprarProductos = async(req, res = response) =>{
       try {
           const response = await  mercadopago.preferences.create(preference)
           const preferenceID = response.body.id
-          console.log(response.body.id);
           res.send({preferenceID})
       } catch (error) {
         console.log(error)

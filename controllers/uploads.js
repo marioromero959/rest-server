@@ -89,7 +89,8 @@ await modelo.save();
 const actualizarImagenCloudinary = async(req, res = response ) => {
 
   const { id, coleccion } = req.params;
-
+  const { archivo } = req.body;
+  //Archivos de cloudinary que se borraron en el front 
   let modelo;
 
   switch ( coleccion ) {
@@ -117,26 +118,58 @@ const actualizarImagenCloudinary = async(req, res = response ) => {
           return res.status(500).json({ msg: 'Se me olvidó validar esto'});
   }
 
-
-  // Limpiar imágenes previas
-  if ( modelo.img ) {
-      const nombreArr = modelo.img.split('/');
-      const nombre    = nombreArr[ nombreArr.length - 1 ];
-      const [ public_id ] = nombre.split('.');
-      cloudinary.uploader.destroy( public_id );
+  
+  // Borrar imagenes
+  if ( modelo.img.length > 0 && archivo){
+    await borrarIMGcloud(archivo,modelo)
   }
 
-
-  const { tempFilePath } = req.files.archivo
-  const { secure_url } = await cloudinary.uploader.upload( tempFilePath );
-  modelo.img = secure_url;
+  if(req.files){
+    await cargarIMGCloud(req,modelo)
+  }
 
   await modelo.save();
-
-
-  res.json( modelo );
+  res.json( {modelo} );
 
 }
+
+const borrarIMGcloud = async(archivo,modelo) => {
+  if(typeof(archivo) == 'object'){
+    await Promise.all(archivo.map(async(borrado)=>{
+      const nombreArr = borrado.split('/');
+      const nombre = nombreArr[ nombreArr.length - 1 ];
+      const [ public_id ] = nombre.split('.');
+      await cloudinary.uploader.destroy( public_id,{invalidate:true});
+      let index = modelo.img.indexOf(borrado)
+      await modelo.img.splice(index, 1);
+    }))
+  }else{
+    //Si entro al else, es porque borrado es un solo archivo en formato string
+  const nombreArr = archivo.split('/');
+  const nombre = nombreArr[ nombreArr.length - 1 ];
+  const [ public_id ] = nombre.split('.');
+  await cloudinary.uploader.destroy( public_id, {invalidate:true});
+  let index = modelo.img.indexOf(archivo);
+  await modelo.img.splice(index, 1)
+}
+}
+
+const cargarIMGCloud = async(req,modelo) => {
+  if(Object.keys(req.files.archivo).length !==9 ){
+    await Promise.all(req.files.archivo.map(async (file)=>{
+      const { tempFilePath } = file
+      const { secure_url } = await cloudinary.uploader.upload( tempFilePath );
+      modelo.img.push(secure_url);
+    }))
+  }else{
+    const { tempFilePath } = req.files.archivo
+    const { secure_url } = await cloudinary.uploader.upload( tempFilePath );
+    modelo.img.push(secure_url);
+  }
+}
+
+
+
 
 const mostrarImagen = async(req, res = response ) => {
 
