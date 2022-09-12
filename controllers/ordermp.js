@@ -8,27 +8,26 @@ mercadopago.configure({
 
 
 const comprarProductos = async(req, res = response) =>{
-
-    const productos = req.body;
+    const dataCompra = req.body;
 
     let preference = {
-        items: [
-          {
-            title: "",
-            unit_price: 0,
-            quantity: 1,
-          },
-        ],
+        items: [],
         back_urls:{
             "success":"https://velka-accesorios.web.app/home",
             "failure":"https://velka-accesorios.web.app/home",
-            "pending":"https://velka-accesorios.web.app/home",
         },
-        auto_return:"approved"
+        payer:{
+          name:dataCompra.dataClient.name,
+          email:dataCompra.dataClient.email,
+        },
+        auto_return:"approved",
+        binary_mode:true
       };
-      productos.forEach(producto => {
+
+      dataCompra.productos.forEach(producto => {
         preference.items.push({
-          title: producto.descripcion,
+          title: producto.nombre,
+          description: producto.descripcion,
           unit_price: producto.precio,
           quantity: producto.cantidad,
         })
@@ -37,14 +36,14 @@ const comprarProductos = async(req, res = response) =>{
       try {
           const response = await  mercadopago.preferences.create(preference)
           const preferenceID = response.body.id
+          console.log("response body",response.body)
           res.send({preferenceID})
       } catch (error) {
         console.log(error)
         return res.status(500).json('Algo salio mal');       
       }
-
-
 }
+
 module.exports = {
-    comprarProductos
+    comprarProductos,
 }
