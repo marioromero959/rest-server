@@ -31,7 +31,7 @@ const ProductoSchema = new Schema({
         default:true
     },
     img:{type:[String]},
-    talles:{type:[Number]}
+    stock:{type:Number}
 })
 
 ProductoSchema.methods.toJSON = function() {

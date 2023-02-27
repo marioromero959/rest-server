@@ -27,7 +27,7 @@ router.post('/',[
     validarJWT,
     check('nombre','El nombre es obligatorio').not().isEmpty(),
     check('precio','El precio es obligatorio').not().isEmpty(),
-    check('talles','El talle es obligatorio').not().isEmpty(),
+    check('stock','El stock es obligatorio').not().isEmpty(),
     check('categoria','No es un id de mongo valido').isMongoId(),
     check('categoria').custom(idExisteCategoria),
     validarCampos
@@ -41,7 +41,7 @@ router.put('/:id',[
     // check('categoria','No es un id de mongo valido').isMongoId(),
     check('nombre','El nombre es obligatorio').not().isEmpty(),
     check('precio','El precio es obligatorio').not().isEmpty(),
-    check('talles','El talle es obligatorio').not().isEmpty(),
+    check('stock','El stock es obligatorio').not().isEmpty(),
     check('id').custom(idExisteProducto),
     validarCampos
 ],actualizarProducto)
