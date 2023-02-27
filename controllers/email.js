@@ -27,6 +27,7 @@ const enviarEmail = async (req, res = response) => {
             from: `Ecommerce Impacto" <${email.email}>` ,
             to: 'marioromero959@gmail.com',
             subject: 'Nuevo email de Ecommerce',
+            replyTo:email.email,
             html: `
             <h2>Nombre del cliente: ${email.nombre}</h2>
             <h3>Correo electrónico: ${email.email}</h3>
