@@ -8,8 +8,7 @@ mercadopago.configure({
 
 
 const comprarProductos = async(req, res = response) =>{
-    const dataCompra = req.body;
-
+  const dataCompra = req.body;
     let preference = {
         items: [],
         back_urls:{
@@ -27,7 +26,7 @@ const comprarProductos = async(req, res = response) =>{
       dataCompra.productos.forEach(producto => {
         preference.items.push({
           title: producto.nombre,
-          description: producto.descripcion,
+          description: 'product_description',
           unit_price: producto.precio,
           quantity: producto.cantidad,
         })
@@ -36,10 +35,10 @@ const comprarProductos = async(req, res = response) =>{
       try {
           const response = await  mercadopago.preferences.create(preference)
           const preferenceID = response.body.id
-          console.log("response body",response.body)
+          // console.log("response body",response.body)
           res.send({preferenceID})
       } catch (error) {
-        console.log(error)
+        // console.log(error)
         return res.status(500).json('Algo salio mal');       
       }
 }
