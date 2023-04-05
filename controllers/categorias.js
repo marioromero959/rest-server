@@ -8,11 +8,13 @@ const obtenerCategorias = async(req, res = response) =>{
     const [total, categorias] = await Promise.all([ //Desestructuramos el arreglo para mandar esos datos, es posicional
         Categoria.countDocuments({estado:true}),
         Categoria.find({estado:true})
+        .sort('nombre')//ordeno las categorias por orden alfabetico
         .populate('usuario','nombre') //Asi mostramos el nombre del usuario
         .skip(Number(desde))
         // .limit(Number(limite)), //Si queremos poner u limite de la cantidad que enviamos
     ]
     )
+
 
     res.json({
         total,

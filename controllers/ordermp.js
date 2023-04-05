@@ -12,8 +12,8 @@ const comprarProductos = async(req, res = response) =>{
     let preference = {
         items: [],
         back_urls:{
-            "success":"https://velka-accesorios.web.app/home",
-            "failure":"https://velka-accesorios.web.app/home",
+            "success":"https://impacto-oficial.web.app/home",
+            "failure":"https://impacto-oficial.web.app/home",
         },
         payer:{
           name:dataCompra.dataClient.name,
@@ -26,7 +26,7 @@ const comprarProductos = async(req, res = response) =>{
       dataCompra.productos.forEach(producto => {
         preference.items.push({
           title: producto.nombre,
-          description: 'product_description',
+          description: producto.nombre,
           unit_price: producto.precio,
           quantity: producto.cantidad,
         })
