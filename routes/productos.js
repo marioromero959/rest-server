@@ -13,7 +13,7 @@ const { validarCampos } = require("../middlewares/validar-campos");
 const router = Router();
 
 //Obtener todos los productos - publico
-router.get('/',obtenerProductos)
+router.get('/getAllProducts',obtenerProductos)
 
 //Obtener un producto - publico
 router.get('/:id',[

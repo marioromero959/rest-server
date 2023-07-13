@@ -25,7 +25,7 @@ const enviarEmail = async (req, res = response) => {
         }
         await transporter.sendMail({
             from: `Ecommerce Impacto" <${email.email}>` ,
-            to: 'marioromero959@gmail.com',
+            to: 'impacto.tiendactes@gmail.com',
             subject: 'Nuevo email de Ecommerce',
             replyTo:email.email,
             html: `

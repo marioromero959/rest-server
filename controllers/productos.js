@@ -2,20 +2,30 @@ const { response } = require("express");
 const { Producto } = require("../models");
 
 const obtenerProductos = async(req, res = response) =>{
-        
-    const { limite = 5, desde = 0} = req.query; //Parametros que envio en la url ?param=valor&param=valor
-
+    const { limite = 12, desde = 0} = req.query; //Parametros que envio en la url ?param=valor&param=valor
+    let filtros = (req.query.category !== 'undefined' ) ? {estado:true,categoria:req.query.category} : {estado:true};
     const [total, productos] = await Promise.all([ //Desestructuramos el arreglo para mandar esos datos, es posicional
-        Producto.countDocuments({estado:true}),
-        Producto.find({estado:true})
+        Producto.countDocuments(filtros),
+        Producto.find(filtros)
         .populate('usuario','nombre') //Asi mostramos el nombre del usuario
         .populate('categoria','nombre') 
         .skip(Number(desde))
-        // .limit(Number(limite)), //El total de productos que queremos mandar
+        .limit(Number(limite)), //El total de productos que queremos mandar
     ]
     )
+    if(total < limite){
+        totalPages = 1
+    }else{
+        //si el total de elementos es mayor que el limite:
+        totalPages = Number(total / limite);
+        if(totalPages % 1 != 0) {
+            totalPages = Math.trunc(totalPages) + 1
+        }
+    }
 
     res.json({
+        limite,
+        totalPages,
         total,
         productos
     })
@@ -23,9 +33,7 @@ const obtenerProductos = async(req, res = response) =>{
 }
 
 const obtenerUnProducto = async(req, res = response) =>{
-
     const { id } =req.params;
-
     const producto = await Producto.findById(id)
                     .populate('usuario','nombre')
                     .populate('categoria','nombre')
