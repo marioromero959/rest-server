@@ -1,7 +1,7 @@
 const { Router } = require('express'); //Usamos la funcion Router de express
 const { check } = require('express-validator');
 
-const { usersGet, usersPost, usersPut, usersDelete, usersPatch } = require('../controllers/user');
+const { usersGet, usersPost, usersPut, usersDelete, usersPatch, resetPass } = require('../controllers/user');
 //Asi ordenamos las importaciones de los middlewares
 const {
     validarCampos,
@@ -15,12 +15,16 @@ const router = Router();
 
 router.get('/',usersGet)
 
-//El id es uno de los parametros que enviamos en la url
+//En esta consulta mandamos el mail para validar el usuario a cambiar la contraseña
+router.put('/',[
+    validarCampos, //No deja continuar si no pasa las validaciones
+], usersPut)
+
 router.put('/:id',[
-    check('id','No es un id valido').isMongoId(), //Revisamos que el id enviado corresponda al de un usuario registrado
+    check('id','No es un id valido').isMongoId(),     //Revisamos que el id enviado corresponda al de un usuario registrado
     check('id').custom(idExiste), //Revisamos si existe
     validarCampos, //No deja continuar si no pasa las validaciones
-], usersPut) 
+], resetPass)
 
 //Enviamos el campo que queremos revisar con el check
 router.post('/', [
@@ -31,8 +35,6 @@ router.post('/', [
     check('rol').custom( esRolValido ),
     validarCampos,
 ], usersPost) //El argumento del medio es un middleware
-
-router.patch('/', usersPatch)
 
 //Mismas validaciones que el put
 router.delete('/:id',[

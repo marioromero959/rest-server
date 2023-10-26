@@ -99,8 +99,8 @@ const actualizarProducto = async(req, res = response) =>{
 const borrarProducto = async(req, res = response) =>{
     
     const {id} = req.params    
-
-    const productoBorrado = await Producto.findByIdAndUpdate(id,{estado:false},{new:true})
+    const productoBorrado = await Producto.findByIdAndDelete(id)
+    // const productoBorrado = await Producto.findByIdAndUpdate(id,{estado:false},{new:true}) BAJA LOGICA
 
     res.status(200).json(productoBorrado)
 }
